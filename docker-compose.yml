@@ -1,0 +1,29 @@
+version: '3.2'
+services:
+  db:
+    image: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: dev_db
+
+  web:
+    build: .
+    volumes:
+      - type: bind
+        source: .
+        target: /app
+    ports:
+      - "4000:4000"
+    depends_on:
+      - db
+    command:
+      - ./run.sh
+    environment:
+      DATABASE_URL: "ecto://postgres:postgres@db/dev_db"
+      DISCUSS_PROD_SECRET_KEY_BASE: "${DISCUSS_PROD_SECRET_KEY_BASE}"
+      DISCUSS_SECRET_KEY_BASE: "${DISCUSS_SECRET_KEY_BASE}"
+      DISCUSS_UEBERAUTH_CLIENT_ID: "${DISCUSS_UEBERAUTH_CLIENT_ID}"
+      DISCUSS_UEBERAUTH_SECRET: "${DISCUSS_UEBERAUTH_SECRET}"
