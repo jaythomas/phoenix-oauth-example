@@ -1,6 +1,10 @@
 defmodule Discuss.Comment do
   use Discuss.Web, :model
 
+  # Topic needs to be stripped from its DB struct and
+  # metafunctions so it can be encoded into JSON.
+  @derive {Poison.Encoder, only: [:content, :user]}
+
   schema "comments" do
     field :content, :string
     belongs_to :user, Discuss.User
